@@ -1759,7 +1759,11 @@ pybindgen.settings.error_handler = ErrorHandler()
                 #print >> sys.stderr, "(lookup %r: %r)" % (name, class_wrapper)
                 return class_wrapper
 
-            if not type_traits_classes.is_convertible(cls, argument_types[0]):
+            try:
+                if not type_traits_classes.is_convertible(cls, argument_types[0]):
+                    return
+            except TypeError as e:
+                print("Ignoring exception: %s %s %s" % (e, cls, argument_types[0]))
                 return
 
             ret = get_class_wrapper(op.return_type)
